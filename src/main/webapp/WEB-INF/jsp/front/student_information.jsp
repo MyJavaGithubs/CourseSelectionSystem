@@ -17,12 +17,12 @@
                     <label>学号：</label>
                     <input type="text" class="form-control" name="student.studentId"
                            style="width:160px;display: inline-block" readonly
-                           value="<s:property value="#session.student.studentId"/>"/>
+                           value="<s:property value="#request.studentInfo.studentId"/>"/>
                     <label>姓名：</label><input type="text" class="form-control" name="student.studentName"
                                              style="width:100px;display: inline-block" readonly
-                                             value="<s:property value="#session.student.studentName"/>"/>
+                                             value="<s:property value="#request.studentInfo.studentName"/>"/>
                     <label>性别：</label>
-                    <s:if test="#session.student.sex==true">
+                    <s:if test="#request.studentInfo.sex==true">
                         <input type="text" class="form-control" name="student.studentSex"
                                style="width:80px;display: inline-block"
                                readonly value="男">
@@ -37,17 +37,17 @@
                     <label>专业：</label>
                     <input type="text" class="form-control" name="student.studentMajor"
                            style="width:120px;display: inline-block"
-                           readonly value="<s:property value="#session.student.studentMajor"/>">
+                           readonly value="<s:property value="#request.studentInfo.studentMajor"/>">
                 </div>
                 <div class="form-group" style="margin-top: 10px">
                     <label>家庭地址：</label>
                     <input type="text" class="form-control" name="student.address"
                            style="width:200px;display: inline-block"
-                           value="<s:property value="#session.student.address"/>">
+                           value="<s:property value="#request.studentInfo.address"/>">
                     <label>电话号码：</label>
                     <input type="text" class="form-control" name="student.phone"
                            style="width:160px;display: inline-block"
-                           value="<s:property value="#session.student.phone"/>">
+                           value="<s:property value="#request.studentInfo.phone"/>">
                 </div>
                 <button type="submit" class="btn btn-default" style="text-align: center">保存</button>
             </form>

@@ -16,10 +16,10 @@
                     <a href="/student_selectCourses">选课报名</a>
                 </li>
                 <li>
-                    <a href="/student_informations">个人信息</a>
+                    <a href="/student_informations?student.studentId=${student.studentId}">个人信息</a>
                 </li>
                 <li>
-                    <a href="/student_coursesScore">课程成绩</a>
+                    <a href="/student_coursesScore?student.studentId=${student.studentId}">课程成绩</a>
                 </li>
             </ul>
         </div>

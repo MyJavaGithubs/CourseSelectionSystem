@@ -46,7 +46,6 @@ public class StudentDaoImpl implements StudentDao {
      * @return
      */
     public Student update(Student student) {
-
         String hql = "update Student set address=:n,phone=:m where studentId=:l";
         Query query = this.getCurrentSession().createQuery(hql);
         query.setParameter("n", student.getAddress());
