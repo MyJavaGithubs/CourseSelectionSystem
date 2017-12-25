@@ -38,4 +38,7 @@ public interface CourseDao {
     public Course getPreviousCourse(Integer courseId);
 
 //    public Course getCourseById(Integer courseId);
+
+
+    public int findCountByName(String courseName);
 }

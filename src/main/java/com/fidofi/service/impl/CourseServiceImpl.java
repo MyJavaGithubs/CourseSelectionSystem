@@ -144,4 +144,9 @@ public class CourseServiceImpl implements CourseService {
         ResultVO<Integer> resultVO = ResultVO.createBySuccess(courseDao.findCount());
         return resultVO;
     }
+
+    public ResultVO<Integer> findCountByName(String courseName) {
+        ResultVO<Integer> resultVO = ResultVO.createBySuccess(courseDao.findCountByName(courseName));
+        return resultVO;
+    }
 }

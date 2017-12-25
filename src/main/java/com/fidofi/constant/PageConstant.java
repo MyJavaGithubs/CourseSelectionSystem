@@ -5,5 +5,5 @@ package com.fidofi.constant;
  * 分页常量，一页显示几个
  */
 public class PageConstant {
-    public static final int size=6; //一页显示多少个
+    public static final int size=2; //一页显示多少个
 }

@@ -72,4 +72,16 @@ public class Page {
 
     public Page() {
     }
+
+    @Override
+    public String toString() {
+        return "Page{" +
+                "currentPage=" + currentPage +
+                ", pageSize=" + pageSize +
+                ", totalPage=" + totalPage +
+                ", totalCounts=" + totalCounts +
+                ", startIndex=" + startIndex +
+                ", orderRole='" + orderRole + '\'' +
+                '}';
+    }
 }

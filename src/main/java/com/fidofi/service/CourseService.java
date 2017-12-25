@@ -33,4 +33,7 @@ public interface CourseService {
 
     public ResultVO<Integer> findCount();
 
+    public ResultVO<Integer> findCountByName(String courseName);
+
+
 }

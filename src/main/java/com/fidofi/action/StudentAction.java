@@ -31,6 +31,10 @@ public class StudentAction extends ActionSupport {
 
     private Integer currentPage;//当前页，分页要用
     private Student student;
+
+    private String orderRole;//排序规则
+
+    private Course course;
     //此对象可以获得request,session
     private ActionContext cxt = ActionContext.getContext();
     private HttpServletRequest request = ServletActionContext.getRequest();
@@ -63,6 +67,22 @@ public class StudentAction extends ActionSupport {
         this.currentPage = currentPage;
     }
 
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
+    }
+
+    public String getOrderRole() {
+        return orderRole;
+    }
+
+    public void setOrderRole(String orderRole) {
+        this.orderRole = orderRole;
+    }
+
     //跳转到登录界面
     public String index() {
         return "Login";
@@ -85,7 +105,6 @@ public class StudentAction extends ActionSupport {
 
     //跳转到选课界面
     public String selectCourses() {
-
         getPage(currentPage);
         return "SelectCourses";
     }
@@ -111,6 +130,14 @@ public class StudentAction extends ActionSupport {
         return "CoursesScore";
     }
 
+    //分页逻辑
+    public String page() {
+        if (course != null) {
+            return findCourse();
+        } else
+            return selectCourses();
+    }
+
     //处理个人信息更新
     public String updateInfo() {
         ResultVO<Student> resultVO = studentService.update(student);
@@ -121,19 +148,39 @@ public class StudentAction extends ActionSupport {
         return "Information";
     }
 
+    //搜索课程
+    public String findCourse() {
+        if (currentPage == null) {
+            currentPage = 1;
+        }
+        Page page = new Page(currentPage, courseService.findCountByName(course.getCourseName()).getData());
+        if(orderRole!=null)
+        page.setOrderRole(orderRole);
+        ResultVO<List<Course>> resultVO = courseService.selectByCourseName(page, course.getCourseName());
+        request.setAttribute("page", page);
+        request.setAttribute("courseList", resultVO.getData());
+        return "SelectCourses";
+    }
+
     //获取课程列表分页展示
     private void getPage(Integer currentPage) {
         if (currentPage == null) {
             currentPage = 1;
         }
+        Page pageBean;
         ResultVO<Integer> result = courseService.findCount();
         if (result.getData() == null) {
             request.setAttribute("getcourseMesg", result.getMessage());
+            pageBean = new Page(currentPage, 0);
         } else {
-            Page page = new Page(currentPage, result.getData());
-            ResultVO<List<Course>> courseList = courseService.getAllCourses(page);
+            pageBean = new Page(currentPage, result.getData());
+            if(orderRole!=null)
+            pageBean.setOrderRole(orderRole);
+            System.out.println(".."+pageBean);
+            ResultVO<List<Course>> courseList = courseService.getAllCourses(pageBean);
             request.setAttribute("courseList", courseList.getData());
         }
+        request.setAttribute("page", pageBean);
         Student s = (Student) cxt.getSession().get("student");
         //获取该学生的选课列表
         ResultVO<List<Course>> resultVO = selectionCoursesService.getStudentCourses(s.getStudentId());

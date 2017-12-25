@@ -10,7 +10,17 @@
     <constant name="struts.objectFactory" value="spring"/>
 
     <!--action配置-->
-    <package name="FidoAction" extends="struts-default" namespace="/">
+    <package name="StudentAction" extends="struts-default" namespace="/">
+        <!--配置拦截器-->
+        <interceptors>
+            <interceptor name="Encoding" class="com.fidofi.interceptor.EncodingInterceptor"></interceptor>
+            <interceptor-stack name="Encode">
+                <interceptor-ref name="Encoding"></interceptor-ref>
+                <interceptor-ref name="defaultStack"></interceptor-ref>
+                <!-- 必须引入这个，否则request不会再往下传-->
+            </interceptor-stack>
+        </interceptors>
+        <default-interceptor-ref name="Encode"></default-interceptor-ref>
         <action name="student_*" class="com.fidofi.action.StudentAction" method="{1}">
             <result name="Login">/WEB-INF/jsp/front/student_login.jsp</result>
             <result name="Information">/WEB-INF/jsp/front/student_information.jsp</result>
@@ -20,6 +30,15 @@
         <action name="selectcourse_*" class="com.fidofi.action.SelectCourseAction" method="{1}">
             <result name="Select" type="chain">student_selectCourses</result>
             <result name="Cancel" type="chain">student_selectCourses</result>
+        </action>
+    </package>
+
+    <package name="ManagerAction" extends="struts-default" namespace="/">
+        <action name="manager_*" class="com.fidofi.action.ManagerAction" method="{1}">
+            <result name="Login">/WEB-INF/jsp/back/manager_login.jsp</result>
+            <result name="BackIndex">/WEB-INF/jsp/back/manager_index.jsp</result>
+            <result name="Score">/WEB-INF/jsp/back/manager_score.jsp</result>
+            <result name="CourseManage">/WEB-INF/jsp/back/manager_course.jsp</result>
         </action>
     </package>
 </struts>

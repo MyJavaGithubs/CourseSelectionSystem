@@ -66,7 +66,11 @@ public class CourseDaoImpl extends HibernateDaoSupport implements CourseDao {
      * @return
      */
     public List<Course> selectCourses(Page page) {
-        String hql = "from Course";
+        String hql = null;
+        if (page.getOrderRole().equals("desc"))
+            hql = "from Course order by credit desc";
+        else
+            hql = "from Course order by credit asc";
         Query query = this.getCurrentSession().createQuery(hql);
         query.setFirstResult(page.getStartIndex());
         query.setMaxResults(page.getPageSize());
@@ -121,7 +125,11 @@ public class CourseDaoImpl extends HibernateDaoSupport implements CourseDao {
      * @return
      */
     public List<Course> selectByCourseName(Page page, String courseName) {
-        String hql = "from Course where courseName=:n";
+        String hql = null;
+        if (page.getOrderRole().equals("desc"))
+            hql = "from Course where courseName=:n order by credit desc";
+        else
+            hql = "from Course where courseName=:n order by credit asc";
         Query query = this.getCurrentSession().createQuery(hql);
         //条件查询
         query.setParameter("n", courseName);
@@ -202,5 +210,23 @@ public class CourseDaoImpl extends HibernateDaoSupport implements CourseDao {
     public Course getPreviousCourse(Integer courseId) {
         Course course = this.getCurrentSession().get(Course.class, courseId);
         return course;
+    }
+
+
+    /**
+     * 根据名称查找该课程记录有几条
+     * 用作分页
+     *
+     * @param courseName
+     * @return
+     */
+    public int findCountByName(String courseName) {
+        String hql = "select count(courseName) from Course";
+        Query query = this.getCurrentSession().createQuery(hql);
+        List<Long> list = query.list();
+        if (list != null && list.size() > 0) {
+            return list.get(0).intValue();
+        }
+        return 0;
     }
 }

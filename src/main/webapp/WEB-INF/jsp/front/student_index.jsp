@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java"  pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
@@ -7,6 +7,9 @@
 <head>
     <title>选课系统首页</title>
     <link href="https://cdn.bootcss.com/bootstrap/3.0.1/css/bootstrap.min.css" rel="stylesheet">
+    <!--注意引用的顺序-->
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.js"></script>
     <script>
         //选课按钮操作
         function selectcourse(courseId, studentId) {
@@ -14,7 +17,7 @@
         }
         //退选课程按钮操作
         function cancelcourse(courseId, studentId) {
-            window.location.href = "/cancelcourse_select?selectcourses.courseId=" + courseId + "&selectcourses.studentId=" + studentId;
+            window.location.href = "/selectcourse_cancel?selectcourses.courseId=" + courseId + "&selectcourses.studentId=" + studentId;
         }
     </script>
 </head>
@@ -24,6 +27,12 @@
         <div class="col-md-7 column">
             <h4>可选课程</h4>
             <nav class="navbar navbar-default" role="navigation">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse"
+                            data-target="#bs-example-navbar-collapse-1"><span
+                            class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span
+                            class="icon-bar"></span><span class="icon-bar"></span></button>
+                </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
                         <li class="dropdown">
@@ -31,17 +40,17 @@
                                     class="caret"></strong></a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="#">学分从小到大</a>
+                                    <a href="/student_page?orderRole=asc">学分从小到大</a>
                                 </li>
                                 <li>
-                                    <a href="#">学分从大到小</a>
+                                    <a href="/student_page?orderRole=desc">学分从大到小</a>
                                 </li>
                             </ul>
                         </li>
                     </ul>
-                    <form class="navbar-form navbar-left" role="search">
+                    <form class="navbar-form navbar-left" role="search" method="post" action="/student_findCourse">
                         <div class="form-group">
-                            <input type="text" class="form-control" style="display: inline-block"/>
+                            <input type="text" class="form-control" name="course.courseName"/>
                         </div>
                         <button type="submit" class="btn btn-default">搜索</button>
                     </form>
@@ -141,27 +150,70 @@
                 </tbody>
             </table>
             <ul class="pagination">
-                <li>
-                    <a href="#">上一页</a>
-                </li>
-                <li>
-                    <a href="#">1</a>
-                </li>
-                <li>
-                    <a href="#">2</a>
-                </li>
-                <li>
-                    <a href="#">3</a>
-                </li>
-                <li>
-                    <a href="#">4</a>
-                </li>
-                <li>
-                    <a href="#">5</a>
-                </li>
-                <li>
-                    <a href="#">下一页</a>
-                </li>
+                <c:choose>
+                    <c:when test="${page.currentPage==1}">
+                        <li class="disabled">
+                            <a href="JavaScript:void(0)" class="disabled">首页</a>
+                        </li>
+                    </c:when>
+                    <c:otherwise>
+                        <li>
+                            <a href="/student_page?currentPage=1">首页</a>
+                        </li>
+                    </c:otherwise>
+                </c:choose>
+                <c:choose>
+                    <c:when test="${page.currentPage==1}">
+                        <li class="disabled">
+                            <a href="JavaScript:void(0)" class="disabled">上一页</a>
+                        </li>
+                    </c:when>
+                    <c:otherwise>
+                        <li>
+                            <a href="/student_page?currentPage=${page.currentPage-1}">上一页</a>
+                        </li>
+                    </c:otherwise>
+                </c:choose>
+                <c:forEach begin="1" end="${page.totalPage}" var="i">
+                    <c:choose>
+                        <c:when test="${i==page.currentPage}">
+                            <li class="disabled">
+                                <a href="JavaScript:void(0)" class="disabled">${i}</a>
+                            </li>
+                        </c:when>
+                        <c:otherwise>
+                            <li>
+                                <a href="/student_page?currentPage=${i}">${i}</a>
+                            </li>
+                        </c:otherwise>
+                    </c:choose>
+                </c:forEach>
+                <c:choose>
+                    <c:when test="${page.currentPage==page.totalPage||page.totalPage==1}">
+                        <li class="disabled">
+                            <a href="JavaScript:void(0)" class="disabled">下一页</a>
+                        </li>
+                    </c:when>
+                    <c:otherwise>
+                        <li>
+                            <a href="/student_page?currentPage=${page.currentPage+1}">下一页</a>
+                        </li>
+                    </c:otherwise>
+
+                </c:choose>
+                <c:choose>
+                    <c:when test="${page.totalPage==1||page.currentPage==page.totalPage}">
+                        <li class="disabled">
+                            <a href="JavaScript:void(0)" class="disabled">尾页</a>
+                        </li>
+                    </c:when>
+
+                    <c:otherwise>
+                        <li>
+                            <a href="/student_page?currentPage=${page.totalPage}">尾页</a>
+                        </li>
+                    </c:otherwise>
+                </c:choose>
             </ul>
         </div>
         <div class="col-md-5 column">
@@ -213,15 +265,16 @@
                 </s:if>
                 </tbody>
             </table>
-            <!--输出-->
-            <s:if test="%{#request.mesg!=null}">
-                <script type="text/javascript">
-                    alert(<s:property  value="#request.mesg"/>);
-                </script>
-            </s:if>
         </div>
     </div>
 </div>
-
+<!--输出-->
+<c:if test="${mesg!=null}">
+    <blockquote>
+        <p>
+                ${mesg}
+        </p>
+    </blockquote>
+</c:if>
 </body>
 </html>

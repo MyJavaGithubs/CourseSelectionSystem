@@ -31,7 +31,6 @@ public class SelectCourseAction {
     //选课操作
     public String select() {
         ResultVO<String> resultVO = selectionCoursesService.confirmCourse(selectcourses);
-        System.out.println(resultVO + "选课");
         request.setAttribute("mesg", resultVO.getMessage());
         return "Select";
     }
@@ -39,7 +38,6 @@ public class SelectCourseAction {
     //退选操作
     public String cancel() {
         ResultVO<String> resultVO = selectionCoursesService.cancelCourse(selectcourses);
-        System.out.println(resultVO + "退选");
         request.setAttribute("mesg", resultVO.getMessage());
         return "Cancel";
     }
