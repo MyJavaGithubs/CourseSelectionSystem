@@ -4,6 +4,7 @@ import com.fidofi.dao.StudentDao;
 import com.fidofi.entity.Course;
 import com.fidofi.entity.Page;
 import com.fidofi.entity.Student;
+import com.fidofi.utils.StuPasswordUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -34,6 +35,8 @@ public class StudentDaoImpl implements StudentDao {
      * @param student
      */
     public void save(Student student) {
+        String password = StuPasswordUtils.getPassword(student.getStudentId());
+        student.setStudentPassword(password);
         this.getCurrentSession().save(student);
     }
 
@@ -77,7 +80,10 @@ public class StudentDaoImpl implements StudentDao {
      * @param student
      */
     public void delete(Student student) {
-        this.getCurrentSession().delete(student);
+        String hql = "delete from Student where studentId=:n ";
+        Query query = this.getCurrentSession().createQuery(hql);
+        query.setParameter("n", student.getStudentId());
+        query.executeUpdate();
     }
 
     /**

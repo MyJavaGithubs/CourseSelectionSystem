@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="s" uri="/struts-tags" %>
 <html>
 <head>
     <title>学生选课后台系统</title>

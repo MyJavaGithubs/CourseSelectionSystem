@@ -39,6 +39,10 @@
             <result name="BackIndex">/WEB-INF/jsp/back/manager_index.jsp</result>
             <result name="Score">/WEB-INF/jsp/back/manager_score.jsp</result>
             <result name="CourseManage">/WEB-INF/jsp/back/manager_course.jsp</result>
+            <result name="CreateStu">/WEB-INF/jsp/back/manager_createStu.jsp</result>
+            <result name="CreateCour">/WEB-INF/jsp/back/manager_createCour.jsp</result>
+            <result name="UpdateCour">/WEB-INF/jsp/back/manager_updateCour.jsp</result>
+            <result name="DetailCour">/WEB-INF/jsp/back/manager_detailCour.jsp</result>
         </action>
     </package>
 </struts>
