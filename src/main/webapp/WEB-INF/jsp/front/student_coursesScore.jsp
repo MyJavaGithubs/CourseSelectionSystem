@@ -18,8 +18,12 @@
                         课程名称
                     </th>
                     <th>
+                        课程类别
+                    </th>
+                    <th>
                         课程学分
                     </th>
+
                     <th>
                         课程成绩
                     </th>
@@ -35,6 +39,9 @@
                                 <s:property value="course.courseName"/>
                             </td>
                             <td>
+                                <s:property value="category.categoryName"/>
+                            </td>
+                            <td>
                                 <s:property value="course.credit"/>
                             </td>
                             <td>
@@ -45,6 +52,9 @@
                 </s:if>
                 <s:else>
                     <tr class="warning">
+                        <td>
+                            无
+                        </td>
                         <td>
                             无
                         </td>

@@ -1,6 +1,8 @@
 package com.fidofi.dao.impl;
 
+import com.fidofi.constant.CreditConstant;
 import com.fidofi.dao.CourseDao;
+import com.fidofi.entity.Category;
 import com.fidofi.entity.Course;
 import com.fidofi.entity.Page;
 import com.fidofi.entity.Student;
@@ -52,11 +54,13 @@ public class CourseDaoImpl extends HibernateDaoSupport implements CourseDao {
 
     /**
      * 删除课程
-     *
-     * @param course
+     * @param courseId
      */
-    public void delete(Course course) {
-        this.getCurrentSession().delete(course);
+    public void delete(Integer courseId) {
+        String hql = "delete from Course where courseId=:n ";
+        Query query = this.getCurrentSession().createQuery(hql);
+        query.setParameter("n",courseId);
+        query.executeUpdate();
     }
 
     /**
@@ -221,8 +225,53 @@ public class CourseDaoImpl extends HibernateDaoSupport implements CourseDao {
      * @return
      */
     public int findCountByName(String courseName) {
-        String hql = "select count(courseName) from Course";
+        String hql = "select count(courseId) from Course where courseName=:n";
         Query query = this.getCurrentSession().createQuery(hql);
+        query.setParameter("n",courseName);
+        List<Long> list = query.list();
+        if (list != null && list.size() > 0) {
+            return list.get(0).intValue();
+        }
+        return 0;
+    }
+
+    /**
+     * 因为涉及到先行课，简化后，约定规定学分的为先行课
+     * @return
+     */
+    public List<Course> getAllPreviousCourse() {
+        String hql="from Course where credit=:n";
+        Query query=this.getCurrentSession().createQuery(hql);
+        query.setParameter("n", CreditConstant.previousCredit);
+        List<Course> courseList=query.list();
+        return courseList;
+    }
+
+    /**
+     * 根据老师姓名查找记录的数量
+     * @param teacherName
+     * @return
+     */
+    public int findCountByTeacher(String teacherName) {
+        String hql = "select count(courseId) from Course where teacherName=:n";
+        Query query = this.getCurrentSession().createQuery(hql);
+        query.setParameter("n",teacherName);
+        List<Long> list = query.list();
+        if (list != null && list.size() > 0) {
+            return list.get(0).intValue();
+        }
+        return 0;
+    }
+
+    /**
+     * 根据给定的类别查找记录数量
+     * @param category
+     * @return
+     */
+    public int findCountByCategory(Category category) {
+        String hql = "select count(courseId) from Course where category.categoryId=:n";
+        Query query = this.getCurrentSession().createQuery(hql);
+        query.setParameter("n",category.getCategoryId());
         List<Long> list = query.list();
         if (list != null && list.size() > 0) {
             return list.get(0).intValue();

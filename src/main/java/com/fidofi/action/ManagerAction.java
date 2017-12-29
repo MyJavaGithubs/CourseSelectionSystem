@@ -1,13 +1,13 @@
 package com.fidofi.action;
 
+import com.fidofi.VO.CourseVO;
 import com.fidofi.VO.ResultVO;
-import com.fidofi.entity.Course;
-import com.fidofi.entity.Manager;
-import com.fidofi.entity.Page;
-import com.fidofi.entity.Student;
+import com.fidofi.entity.*;
+import com.fidofi.service.CategoryService;
 import com.fidofi.service.CourseService;
 import com.fidofi.service.ManagerService;
 import com.fidofi.service.StudentService;
+import com.fidofi.utils.CourseUtils;
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +28,9 @@ public class ManagerAction extends ActionSupport {
     private HttpServletRequest request = ServletActionContext.getRequest();
     //学生
     private Student student;
+
+    //课程
+    private Course course;
     @Autowired
     private ManagerService managerService;
 
@@ -36,6 +39,9 @@ public class ManagerAction extends ActionSupport {
 
     @Autowired
     private CourseService courseService;
+
+    @Autowired
+    private CategoryService categoryService;
 
 
     public Manager getManager() {
@@ -60,6 +66,14 @@ public class ManagerAction extends ActionSupport {
 
     public void setCurrentPage(Integer currentPage) {
         this.currentPage = currentPage;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
     public String index() {
@@ -106,7 +120,7 @@ public class ManagerAction extends ActionSupport {
         }
         //分页对象
         Page page = new Page(currentPage, courseService.findCount().getData());
-        ResultVO<List<Course>> resultVO = courseService.getAllCourses(page);
+        ResultVO<List<CourseVO>> resultVO = courseService.getAllCourses(page);
         if (resultVO.getData() == null) {
             request.setAttribute("getCourseMesg", resultVO.getMessage());
         } else {
@@ -149,31 +163,52 @@ public class ManagerAction extends ActionSupport {
 
     //跳转到新增课程界面
     public String createCour() {
+        ResultVO<List<Category>> categoryList = categoryService.getAllCategory();
+        ResultVO<List<CourseVO>> previousCouList = courseService.getAllPreviousCourses();
+        //先修课
+        request.setAttribute("previousCouList", previousCouList.getData());
+        request.setAttribute("categoryList", categoryList.getData());//类别
         return "CreateCour";
     }
 
     //处理新增课程
     public String doCreateCour() {
+        CourseVO courseVO = CourseUtils.getCourseVO(course);
+        courseVO.setSelectNum(course.getStudentNum());
+        ResultVO<String> resultVO = courseService.create(courseVO);
         return this.manageCourse();
     }
 
     //跳转到更新课程页面
     public String updateCour() {
-        return "UpdateCour";
+        ResultVO<CourseVO> resultVO = this.courseService.selectByCourseId(course.getCourseId());
+        ResultVO<List<Category>> categoryList = categoryService.getAllCategory();
+        if (resultVO.getData() == null) {
+            return this.manageStudent();
+        } else {
+            request.setAttribute("categoryList", categoryList.getData());//类别
+            request.setAttribute("updateCour", resultVO.getData());
+            return "UpdateCour";
+        }
     }
 
     //删除课程
     public String deleteCour() {
+        this.courseService.delete(course.getCourseId());
         return this.manageCourse();
     }
 
     //查看课程详情
     public String detailCour() {
+        ResultVO<CourseVO> resultVO = courseService.selectByCourseId(course.getCourseId());
+        request.setAttribute("detailCour", resultVO.getData());
         return "DetailCour";
     }
 
     //处理更新课程
     public String doUpdateCour() {
+        CourseVO courseVO = CourseUtils.getCourseVO(course);
+        courseService.update(courseVO);
         return this.manageCourse();
     }
 }

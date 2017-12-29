@@ -1,15 +1,14 @@
 package com.fidofi.action;
 
 import com.fidofi.VO.CourseAndScore;
+import com.fidofi.VO.CourseVO;
 import com.fidofi.VO.ResultVO;
 import com.fidofi.dao.CourseDao;
+import com.fidofi.entity.Category;
 import com.fidofi.entity.Course;
 import com.fidofi.entity.Page;
 import com.fidofi.entity.Student;
-import com.fidofi.service.CourseService;
-import com.fidofi.service.MajorCoursesService;
-import com.fidofi.service.SelectionCoursesService;
-import com.fidofi.service.StudentService;
+import com.fidofi.service.*;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.ServletActionContext;
@@ -31,7 +30,9 @@ public class StudentAction extends ActionSupport {
 
     private Integer currentPage;//当前页，分页要用
     private Student student;
+    private String role;
 
+    private Category category;
     private String orderRole;//排序规则
 
     private Course course;
@@ -50,6 +51,9 @@ public class StudentAction extends ActionSupport {
 
     @Autowired
     private CourseService courseService;
+
+    @Autowired
+    private CategoryService categoryService;
 
     public Student getStudent() {
         return student;
@@ -81,6 +85,22 @@ public class StudentAction extends ActionSupport {
 
     public void setOrderRole(String orderRole) {
         this.orderRole = orderRole;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     //跳转到登录界面
@@ -148,17 +168,45 @@ public class StudentAction extends ActionSupport {
         return "Information";
     }
 
+    //按类别查找
+    public String findByCategory() {
+        if (currentPage == null) {
+            currentPage = 1;
+        }
+        ResultVO<Category> resultCategory = categoryService.getCategoryById(category.getCategoryId());
+        Page page = new Page(currentPage, courseService.findCountByCategory(resultCategory.getData()).getData());
+        ResultVO<List<CourseVO>> courseList = courseService.selectByCategory(page, category.getCategoryId());
+        request.setAttribute("page", page);
+        request.setAttribute("courseList", courseList.getData());
+        //将类别信息存进去
+        ResultVO<List<Category>> categoryList = categoryService.getAllCategory();
+        request.setAttribute("categoryList", categoryList.getData());
+        return "SelectCourses";
+    }
+
     //搜索课程
     public String findCourse() {
         if (currentPage == null) {
             currentPage = 1;
         }
-        Page page = new Page(currentPage, courseService.findCountByName(course.getCourseName()).getData());
-        if(orderRole!=null)
-        page.setOrderRole(orderRole);
-        ResultVO<List<Course>> resultVO = courseService.selectByCourseName(page, course.getCourseName());
+        Page page;
+        ResultVO<List<CourseVO>> resultVO;
+        if ("teacherName".equals(role)) {
+            page = new Page(currentPage, courseService.findCountByTeacher(course.getCourseName()).getData());
+            if (orderRole != null)
+                page.setOrderRole(orderRole);
+            resultVO = courseService.selectByTeacher(page, course.getCourseName());
+        } else {
+            page = new Page(currentPage, courseService.findCountByName(course.getCourseName()).getData());
+            if (orderRole != null)
+                page.setOrderRole(orderRole);
+            resultVO = courseService.selectByCourseName(page, course.getCourseName());
+        }
         request.setAttribute("page", page);
         request.setAttribute("courseList", resultVO.getData());
+        //将类别信息存进去
+        ResultVO<List<Category>> categoryList = categoryService.getAllCategory();
+        request.setAttribute("categoryList", categoryList.getData());
         return "SelectCourses";
     }
 
@@ -167,6 +215,9 @@ public class StudentAction extends ActionSupport {
         if (currentPage == null) {
             currentPage = 1;
         }
+        //将类别信息存进去
+        ResultVO<List<Category>> categoryList = categoryService.getAllCategory();
+        request.setAttribute("categoryList", categoryList.getData());
         Page pageBean;
         ResultVO<Integer> result = courseService.findCount();
         if (result.getData() == null) {
@@ -174,11 +225,11 @@ public class StudentAction extends ActionSupport {
             pageBean = new Page(currentPage, 0);
         } else {
             pageBean = new Page(currentPage, result.getData());
-            if(orderRole!=null)
-            pageBean.setOrderRole(orderRole);
-            System.out.println(".."+pageBean);
-            ResultVO<List<Course>> courseList = courseService.getAllCourses(pageBean);
-            request.setAttribute("courseList", courseList.getData());
+            if (orderRole != null)
+                pageBean.setOrderRole(orderRole);
+                ResultVO<List<CourseVO>> courseList = courseService.getAllCourses(pageBean);
+                request.setAttribute("courseList", courseList.getData());
+
         }
         request.setAttribute("page", pageBean);
         Student s = (Student) cxt.getSession().get("student");

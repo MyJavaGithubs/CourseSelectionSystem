@@ -1,5 +1,6 @@
 package com.fidofi.dao;
 
+import com.fidofi.entity.Category;
 import com.fidofi.entity.Course;
 import com.fidofi.entity.Page;
 import org.springframework.stereotype.Repository;
@@ -17,7 +18,7 @@ public interface CourseDao {
 
     public Course update(Course course);
 
-    public void delete(Course course);
+    public void delete(Integer courseId);
 
     public List<Course> selectCourses(Page page);
 
@@ -41,4 +42,10 @@ public interface CourseDao {
 
 
     public int findCountByName(String courseName);
+
+    public List<Course> getAllPreviousCourse();
+
+    public int findCountByTeacher(String teacherName);
+
+    public int findCountByCategory(Category category);
 }

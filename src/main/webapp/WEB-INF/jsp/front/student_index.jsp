@@ -24,7 +24,7 @@
 <body>
 <div class="container">
     <div class="row clearfix">
-        <div class="col-md-7 column">
+        <div class="col-md-12 column">
             <h4>可选课程</h4>
             <nav class="navbar navbar-default" role="navigation">
                 <div class="navbar-header">
@@ -49,11 +49,28 @@
                         </li>
                     </ul>
                     <form class="navbar-form navbar-left" role="search" method="post" action="/student_findCourse">
+                        <select class="form-control" style="width: 180px" name="role">
+                            <option value="courseName">搜索课程名称</option>
+                            <option value="teacherName">搜索老师姓名</option>
+                        </select>
                         <div class="form-group">
                             <input type="text" class="form-control" name="course.courseName"/>
                         </div>
                         <button type="submit" class="btn btn-default">搜索</button>
                     </form>
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">类别<strong
+                                class="caret"></strong></a>
+                            <ul class="dropdown-menu">
+                               <s:iterator value="#request.categoryList">
+                                   <li>
+                                       <a href="/student_findByCategory?category.categoryId=<s:property value='categoryId'/> "><s:property value="categoryName"/> </a>
+                                   </li>
+                               </s:iterator>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
             </nav>
             <table class="table">
@@ -61,6 +78,9 @@
                 <tr>
                     <th>
                         课程名称
+                    </th>
+                    <th>
+                        课程类别
                     </th>
                     <th>
                         学分
@@ -93,6 +113,9 @@
                                 <s:property value="courseName"/>
                             </td>
                             <td>
+                                <s:property value="category.categoryName"/>
+                            </td>
+                            <td>
                                 <s:property value="credit"/>
                             </td>
                             <td>
@@ -102,7 +125,7 @@
                                 <s:property value="teacherName"/>
                             </td>
                             <td>
-                                <s:property value="previousId"/>
+                                <s:property value="previousCourse.courseName"/>
                             </td>
                             <td>
                                 <s:property value="studentNum"/>
@@ -121,6 +144,9 @@
                 </s:if>
                 <s:else>
                     <tr class="warning">
+                        <td>
+                            无
+                        </td>
                         <td>
                             无
                         </td>
@@ -216,13 +242,16 @@
                 </c:choose>
             </ul>
         </div>
-        <div class="col-md-5 column">
+        <div class="col-md-12 column">
             <h4>已选课程</h4>
             <table class="table table-hover table-bordered">
                 <thead>
                 <tr>
                     <th>
                         课程名称
+                    </th>
+                    <th>
+                        课程类别
                     </th>
                     <th>
                         学分
@@ -244,6 +273,9 @@
                         <tr class="success">
                             <td>
                                 <s:property value="courseName"/>
+                            </td>
+                            <td>
+                                <s:property value="category.categoryName"/>
                             </td>
                             <td>
                                 <s:property value="credit"/>
