@@ -23,4 +23,5 @@ public class ManagerDaoImpl implements ManagerDao {
         } else
             return false;
     }
+
 }

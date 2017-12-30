@@ -22,6 +22,9 @@
                 <li>
                     <a href="/manager_manageScore">成绩管理</a>
                 </li>
+                <li>
+                    <a href="/manager_showChart">数据统计</a>
+                </li>
             </ul>
         </div>
     </div>

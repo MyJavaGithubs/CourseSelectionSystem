@@ -26,7 +26,7 @@ public interface CourseDao {
 
     public List<Course> selectByCategory(Page page, Integer categoryId);
 
-    public List<Course> selectByCourseName(Page page,String courseName);
+    public List<Course> selectByCourseName(Page page, String courseName);
 
     public Course selectByCourseId(Integer courseId);
 
@@ -48,4 +48,7 @@ public interface CourseDao {
     public int findCountByTeacher(String teacherName);
 
     public int findCountByCategory(Category category);
+
+    public List<Course> getAllCourse();
+
 }

@@ -1,5 +1,6 @@
 package com.fidofi.service;
 
+import com.fidofi.VO.CategoryVO;
 import com.fidofi.VO.CourseVO;
 import com.fidofi.VO.ResultVO;
 import com.fidofi.entity.Category;
@@ -8,6 +9,7 @@ import com.fidofi.entity.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.xml.transform.Result;
 import java.util.List;
 
 /**
@@ -17,7 +19,7 @@ import java.util.List;
 @Transactional
 public interface CourseService {
 
-    public ResultVO<String> create(CourseVO course);
+    public ResultVO<String> create(Course course);
 
     public ResultVO<CourseVO> update(CourseVO course);
 
@@ -38,10 +40,12 @@ public interface CourseService {
     public ResultVO<Integer> findCountByName(String courseName);
 
     public ResultVO<List<CourseVO>> getAllPreviousCourses();
+
     public ResultVO<Integer> findCountByTeacher(String teacherName);
 
     public ResultVO<Integer> findCountByCategory(Category category);
 
+    public ResultVO<List<CategoryVO>> getCategoryVO();
 
-
+    public ResultVO<List<Course>> getAllCourse();
 }

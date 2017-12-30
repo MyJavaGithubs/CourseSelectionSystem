@@ -2,6 +2,7 @@ package com.fidofi.dao.impl;
 
 import com.fidofi.dao.MajorCoursesDao;
 import com.fidofi.entity.Majorcourses;
+import com.fidofi.entity.Page;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -72,4 +73,5 @@ public class MajorCoursesDaoImpl implements MajorCoursesDao {
             return true;
         }
     }
+
 }

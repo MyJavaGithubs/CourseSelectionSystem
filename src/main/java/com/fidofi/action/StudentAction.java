@@ -12,6 +12,7 @@ import com.fidofi.service.*;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.ServletActionContext;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -32,6 +33,7 @@ public class StudentAction extends ActionSupport {
     private Student student;
     private String role;
 
+    private String oldPassword;//旧密码，更改密码用
     private Category category;
     private String orderRole;//排序规则
 
@@ -103,6 +105,14 @@ public class StudentAction extends ActionSupport {
         this.role = role;
     }
 
+    public String getOldPassword() {
+        return oldPassword;
+    }
+
+    public void setOldPassword(String oldPassword) {
+        this.oldPassword = oldPassword;
+    }
+
     //跳转到登录界面
     public String index() {
         return "Login";
@@ -113,7 +123,7 @@ public class StudentAction extends ActionSupport {
         ResultVO<Student> resultVO = studentService.login(student.getStudentId(), student.getStudentPassword());
         if (resultVO.getData() == null) {
             //登录不成功，返回错误信息
-            cxt.put("loginMesg", resultVO.getMessage());
+            request.setAttribute("loginMesg",resultVO.getMessage());
             return "Login";
         } else {
             //登录成功，将学生信息放入session
@@ -208,6 +218,27 @@ public class StudentAction extends ActionSupport {
         ResultVO<List<Category>> categoryList = categoryService.getAllCategory();
         request.setAttribute("categoryList", categoryList.getData());
         return "SelectCourses";
+    }
+
+    //跳到修改密码界面
+    public String updatePassword(){
+       return "UpdatePassword";
+    }
+
+    //处理修改密码
+    public String doUpdatePassword(){
+     Student currentStudent=(Student)cxt.getSession().get("student");
+        System.out.println(oldPassword+".."+currentStudent.getStudentPassword());
+     if(currentStudent.getStudentPassword().equals(oldPassword)){
+         studentService.changePassword(currentStudent.getStudentId(),student.getStudentPassword());
+         //更改密码后重新登录，清除session
+         cxt.getSession().remove("student");
+         return "Login";
+     }
+     else{
+         request.setAttribute("updateMesg","旧密码输入不正确");
+         return "UpdatePassword";
+     }
     }
 
     //获取课程列表分页展示

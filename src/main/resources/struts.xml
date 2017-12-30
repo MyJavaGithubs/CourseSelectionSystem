@@ -14,6 +14,7 @@
         <!--配置拦截器-->
         <interceptors>
             <interceptor name="Encoding" class="com.fidofi.interceptor.EncodingInterceptor"></interceptor>
+            <interceptor name="StudentLogin" class="com.fidofi.interceptor.StudentLoginInterceptor"></interceptor>
             <interceptor-stack name="Encode">
                 <interceptor-ref name="Encoding"></interceptor-ref>
                 <interceptor-ref name="defaultStack"></interceptor-ref>
@@ -26,6 +27,12 @@
             <result name="Information">/WEB-INF/jsp/front/student_information.jsp</result>
             <result name="SelectCourses">/WEB-INF/jsp/front/student_index.jsp</result>
             <result name="CoursesScore">/WEB-INF/jsp/front/student_coursesScore.jsp</result>
+            <result name="UpdatePassword">/WEB-INF/jsp/front/student_updatePassword.jsp</result>
+            <interceptor-ref name="StudentLogin">
+                <param name="excludeMethods">login</param>
+            </interceptor-ref>
+            <!--要加上这个默认的拦截器才会起作用-->
+            <interceptor-ref name="defaultStack"></interceptor-ref>
         </action>
         <action name="selectcourse_*" class="com.fidofi.action.SelectCourseAction" method="{1}">
             <result name="Select" type="chain">student_selectCourses</result>
@@ -34,6 +41,16 @@
     </package>
 
     <package name="ManagerAction" extends="struts-default" namespace="/">
+        <interceptors>
+            <interceptor name="Encoding" class="com.fidofi.interceptor.EncodingInterceptor"></interceptor>
+            <interceptor name="ManagerLogin" class="com.fidofi.interceptor.ManagerLoginInterceptor"></interceptor>
+            <interceptor-stack name="Encode">
+                <interceptor-ref name="Encoding"></interceptor-ref>
+                <interceptor-ref name="defaultStack"></interceptor-ref>
+                <!-- 必须引入这个，否则request不会再往下传-->
+            </interceptor-stack>
+        </interceptors>
+        <default-interceptor-ref name="Encode"></default-interceptor-ref>
         <action name="manager_*" class="com.fidofi.action.ManagerAction" method="{1}">
             <result name="Login">/WEB-INF/jsp/back/manager_login.jsp</result>
             <result name="BackIndex">/WEB-INF/jsp/back/manager_index.jsp</result>
@@ -43,6 +60,12 @@
             <result name="CreateCour">/WEB-INF/jsp/back/manager_createCour.jsp</result>
             <result name="UpdateCour">/WEB-INF/jsp/back/manager_updateCour.jsp</result>
             <result name="DetailCour">/WEB-INF/jsp/back/manager_detailCour.jsp</result>
+            <result name="ShowChart">/WEB-INF/jsp/back/manager_showChart.jsp</result>
+            <interceptor-ref name="ManagerLogin">
+                <param name="excludeMethods">login</param>
+            </interceptor-ref>
+            <!--要加上这个默认的拦截器才会起作用-->
+            <interceptor-ref name="defaultStack"></interceptor-ref>
         </action>
     </package>
 </struts>

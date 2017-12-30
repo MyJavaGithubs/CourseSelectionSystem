@@ -21,6 +21,9 @@
                 <li>
                     <a href="/student_coursesScore?student.studentId=${student.studentId}">课程成绩</a>
                 </li>
+                <li style="float: right">
+                    <a href="/student_updatePassword">修改密码</a>
+                </li>
             </ul>
         </div>
     </div>

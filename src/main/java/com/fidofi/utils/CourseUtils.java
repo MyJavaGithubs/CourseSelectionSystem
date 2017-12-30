@@ -21,6 +21,7 @@ public class CourseUtils {
      */
     public static Course getCoursePOJO(CourseVO courseVO) {
         Course course = new Course();
+        course.setCourseId(courseVO.getCourseId());
         course.setCourseName(courseVO.getCourseName());
         course.setTerm(courseVO.getTerm());
         course.setTeacherName(courseVO.getTeacherName());

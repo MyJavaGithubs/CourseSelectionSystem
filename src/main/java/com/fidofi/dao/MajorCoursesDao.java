@@ -1,6 +1,7 @@
 package com.fidofi.dao;
 
 import com.fidofi.entity.Majorcourses;
+import com.fidofi.entity.Page;
 
 import java.util.List;
 
@@ -15,5 +16,6 @@ public interface MajorCoursesDao {
     public List<Majorcourses> getByCourse(Integer courseId);
 
     public boolean isMajor(Integer courseId, String studentId);
+
 
 }

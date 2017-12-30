@@ -9,6 +9,14 @@ public class Manager {
     private String rootName;
     private String rootPassword;
 
+    public Manager(String rootName, String rootPassword) {
+        this.rootName = rootName;
+        this.rootPassword = rootPassword;
+    }
+
+    public Manager() {
+    }
+
     public String getRootName() {
         return rootName;
     }

@@ -8,8 +8,8 @@
     <link href="https://cdn.bootcss.com/bootstrap/3.0.1/css/bootstrap.min.css" rel="stylesheet">
     <script>
         //新增学生
-        function  createCour() {
-            window.location.href="/manager_createCour";
+        function createCour() {
+            window.location.href = "/manager_createCour";
         }
     </script>
 </head>
@@ -17,7 +17,9 @@
 <div class="container">
     <div class="row clearfix">
         <div class="col-md-12 column">
-            <button type="button" class="btn btn-default" style="float: right;margin: 10px" onclick="createCour()">新增课程</button>
+            <button type="button" class="btn btn-default" style="float: right;margin: 10px" onclick="createCour()">
+                新增课程
+            </button>
             <table class="table table-bordered">
                 <thead>
                 <tr>

@@ -15,4 +15,5 @@ public interface MajorCoursesService {
     public ResultVO<List<CourseAndScore>> getByStudent(String studentId);
 
     public ResultVO<List<StudentAndScore>> getByCourse(Integer courseId);
+
 }

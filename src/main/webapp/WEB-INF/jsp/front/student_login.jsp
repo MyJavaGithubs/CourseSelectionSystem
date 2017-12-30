@@ -7,7 +7,6 @@
     <link href="https://cdn.bootcss.com/bootstrap/3.0.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<body>
 <div class="container">
     <div class="row clearfix">
         <div class="col-md-12 column">
@@ -43,17 +42,17 @@
                     </div>
                 </form>
                 <c:if test="${loginMesg!=null}">
-                    <div class="alert alert-dismissable alert-warning">
-                        <h4>
-                            注意!
-                        </h4>
-                            ${loginMesg}
-                    </div>
-                </c:if>
+                <div class="alert alert-dismissable alert-warning">
+                    <h4>
+                        注意!
+                    </h4>
+                        ${loginMesg}
+                </div>
+            </c:if>
             </div>
         </div>
     </div>
 </div>
-</body>
+
 </body>
 </html>

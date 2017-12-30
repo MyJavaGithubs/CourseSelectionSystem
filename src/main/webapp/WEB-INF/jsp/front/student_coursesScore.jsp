@@ -6,6 +6,7 @@
 <html>
 <head>
     <title>课程成绩查询</title>
+    <link href="https://cdn.bootcss.com/bootstrap/3.0.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="container">
@@ -39,7 +40,7 @@
                                 <s:property value="course.courseName"/>
                             </td>
                             <td>
-                                <s:property value="category.categoryName"/>
+                                <s:property value="course.category.categoryName"/>
                             </td>
                             <td>
                                 <s:property value="course.credit"/>

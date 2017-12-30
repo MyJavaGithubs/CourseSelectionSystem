@@ -42,6 +42,7 @@
                         <s:iterator value="#request.previousCouList">
                             <option value="<s:property value='courseId'/>"><s:property value="courseName"/></option>
                         </s:iterator>
+                        <option value="" selected>无</option>
                     </select>
                 </div>
                 <div class="from-group">

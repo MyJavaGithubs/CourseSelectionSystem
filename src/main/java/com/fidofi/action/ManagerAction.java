@@ -1,13 +1,12 @@
 package com.fidofi.action;
 
+import com.fidofi.VO.CategoryVO;
 import com.fidofi.VO.CourseVO;
 import com.fidofi.VO.ResultVO;
 import com.fidofi.entity.*;
-import com.fidofi.service.CategoryService;
-import com.fidofi.service.CourseService;
-import com.fidofi.service.ManagerService;
-import com.fidofi.service.StudentService;
+import com.fidofi.service.*;
 import com.fidofi.utils.CourseUtils;
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +41,9 @@ public class ManagerAction extends ActionSupport {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private MajorCoursesService majorCoursesService;
 
 
     public Manager getManager() {
@@ -83,6 +85,10 @@ public class ManagerAction extends ActionSupport {
     public String login() {
         ResultVO<Boolean> resultVO = managerService.login(manager.getRootName(), manager.getRootPassword());
         if (resultVO.getData() == true) {
+            ActionContext cxt = ActionContext.getContext();
+            Manager currentManager = new Manager(manager.getRootName(), manager.getRootPassword());
+            //放进去
+            cxt.getSession().put("manager", currentManager);
             return manageStudent();
         } else {
             request.setAttribute("loginMesg", resultVO.getMessage());
@@ -110,6 +116,7 @@ public class ManagerAction extends ActionSupport {
 
     //跳转到成绩管理
     public String manageScore() {
+
         return "Score";
     }
 
@@ -173,9 +180,8 @@ public class ManagerAction extends ActionSupport {
 
     //处理新增课程
     public String doCreateCour() {
-        CourseVO courseVO = CourseUtils.getCourseVO(course);
-        courseVO.setSelectNum(course.getStudentNum());
-        ResultVO<String> resultVO = courseService.create(courseVO);
+        course.setSelectNum(0);
+        ResultVO<String> resultVO = courseService.create(course);
         return this.manageCourse();
     }
 
@@ -210,5 +216,14 @@ public class ManagerAction extends ActionSupport {
         CourseVO courseVO = CourseUtils.getCourseVO(course);
         courseService.update(courseVO);
         return this.manageCourse();
+    }
+
+    //数据图表展示
+    public String showChart() {
+        ResultVO<List<CategoryVO>> resultVO = courseService.getCategoryVO();
+        ResultVO<List<Course>> courseList = courseService.getAllCourse();
+        request.setAttribute("categoryVOList", resultVO.getData());
+        request.setAttribute("allCourseList", courseList.getData());
+        return "ShowChart";
     }
 }

@@ -1,7 +1,9 @@
 package com.fidofi.service.impl;
 
+import com.fidofi.VO.CategoryVO;
 import com.fidofi.VO.CourseVO;
 import com.fidofi.VO.ResultVO;
+import com.fidofi.dao.CategoryDao;
 import com.fidofi.dao.CourseDao;
 import com.fidofi.entity.Category;
 import com.fidofi.entity.Course;
@@ -25,9 +27,11 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     private CourseDao courseDao;
 
-    public ResultVO<String> create(CourseVO courseVO) {
+    @Autowired
+    private CategoryDao categoryDao;
+
+    public ResultVO<String> create(Course course) {
         ResultVO<String> resultVO;
-        Course course = CourseUtils.getCoursePOJO(courseVO);
         try {
             courseDao.create(course);
             resultVO = ResultVO.createBySuccess("新增课程成功");
@@ -214,6 +218,24 @@ public class CourseServiceImpl implements CourseService {
 
     public ResultVO<Integer> findCountByCategory(Category category) {
         ResultVO<Integer> resultVO = ResultVO.createBySuccess(courseDao.findCountByCategory(category));
+        return resultVO;
+    }
+
+    public ResultVO<List<CategoryVO>> getCategoryVO() {
+        List<Category> categoryList = categoryDao.getAllCategory();
+        List<CategoryVO> categoryVOList = new ArrayList<CategoryVO>();
+        for (Category category : categoryList) {
+            int courseNum = courseDao.findCountByCategory(category);
+            CategoryVO categoryVO = new CategoryVO(category, courseNum);
+            categoryVOList.add(categoryVO);
+        }
+        ResultVO<List<CategoryVO>> resultVO = ResultVO.createBySuccess("查找类别统计数据成功", categoryVOList);
+        return resultVO;
+    }
+
+    public ResultVO<List<Course>> getAllCourse() {
+        List<Course> courseList = courseDao.getAllCourse();
+        ResultVO<List<Course>> resultVO = ResultVO.createBySuccess("获得所有课程成功", courseList);
         return resultVO;
     }
 }

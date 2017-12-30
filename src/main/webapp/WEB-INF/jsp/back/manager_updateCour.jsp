@@ -22,6 +22,7 @@
             <form role="form" action="/manager_doUpdateCour" method="post" style="margin-left: 400px;margin-top: 80px;">
             <div class="form-group">
                 <br/>
+                <input type="hidden" name="course.courseId" value="<s:property value='#request.updateCour.courseId'/>">
                 <label>课程名称：</label>
                 <input type="text" class="form-control" name="course.courseName"
                        value="<s:property value='#request.updateCour.courseName'/> "
